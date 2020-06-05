@@ -1396,12 +1396,12 @@ void RunPerformanceMode(SystemUnderTest* sut, QuerySampleLibrary* qsl,
 
   if (pc_sc_ratio > 1.01 || pc_sc_ratio < 0.99) {
     LogDetail([pc_sc_ratio](AsyncDetail& detail) {
-      detail.Error("PerfClock and system_clock differ by more than 1\%! ",
+      detail.Error("PerfClock and system_clock differ by more than 1%! ",
                    "pc_sc_ratio", pc_sc_ratio);
     });
   } else if (pc_sc_ratio > 1.001 || pc_sc_ratio < 0.999) {
     LogDetail([pc_sc_ratio](AsyncDetail& detail) {
-      detail.Warning("PerfClock and system_clock differ by more than 0.1\%. ",
+      detail.Warning("PerfClock and system_clock differ by more than 0.1%. ",
                      "pc_sc_ratio", pc_sc_ratio);
     });
   }

@@ -99,19 +99,18 @@ OnnxRuntimeTestSession::OnnxRuntimeTestSession(OrtSession* sess, SampleLoader* s
   for (size_t i = 0; i != output_count; ++i) {
     output_names_raw_ptr[i] = output_names_[i].c_str();
   }
-  eigen_threadpool_ = std::make_unique<onnxruntime::ThreadPoolTempl<onnxruntime::Env>>("perftest",concurrent_session_runs,false,onnxruntime::Env::Default(),thread_options_);
+  eigen_threadpool_ = std::make_unique<onnxruntime::ThreadPoolTempl<onnxruntime::Env>>(ORT_TSTR("perftest"),static_cast<int>(concurrent_session_runs),false,onnxruntime::Env::Default(),thread_options_);
 }
 
 void OnnxRuntimeTestSession::IssueQuery(const std::vector<mlperf::QuerySample>& samples) {
   if (samples.size() == 1) {
     mlperf::QuerySampleResponse res;
-    size_t output_count = output_names_.size();
-    OrtValue* outputs[output_count];
-    memset(outputs, 0, output_count * sizeof(OrtValue*));
+    size_t output_count = output_names_.size();    
+    std::vector<OrtValue*> outputs(output_count);    
     const mlperf::QuerySample& s = samples[0];
     ThrowOnError(c_api->Run(sess_, nullptr, input_names_.data(), sample_loader_->GetInput(s.index),
                                  input_names_.size(), output_names_raw_ptr.data(), output_names_raw_ptr.size(),
-                                 outputs));
+                                 outputs.data()));
     for (size_t i = 0; i != output_names_.size(); ++i) {
       c_api->ReleaseValue(outputs[i]);
     }
@@ -124,11 +123,12 @@ void OnnxRuntimeTestSession::IssueQuery(const std::vector<mlperf::QuerySample>& 
     //It is possible to group the samples in batches to get better performance, but it is highly model dependent.
     for(const mlperf::QuerySample& s: samples) {
       eigen_threadpool_->Schedule([output_count, this, &s]() {
-        OrtValue* outputs[output_count];
-        memset(outputs, 0, output_count * sizeof(OrtValue*));
+        //OrtValue* outputs[output_count];
+        //memset(outputs, 0, output_count * sizeof(OrtValue*));
+        std::vector<OrtValue*> outputs(output_count);
         ThrowOnError(c_api->Run(sess_, nullptr, input_names_.data(), sample_loader_->GetInput(s.index),
                                 input_names_.size(), output_names_raw_ptr.data(), output_names_raw_ptr.size(),
-                                outputs));
+                                outputs.data()));
         for (size_t i = 0; i != output_names_.size(); ++i) {
           c_api->ReleaseValue(outputs[i]);
         }
