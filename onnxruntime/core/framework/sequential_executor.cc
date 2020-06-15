@@ -214,6 +214,9 @@ Status SequentialExecutor::Execute(const SessionState& session_state, const std:
 #endif
 
     auto p_op_kernel = session_state.GetKernel(node_index);
+    if (p_op_kernel->Node().Name().compare("MatMul_308_Grad/Gemm_2") == 0) {
+      std::cout << "About to execute MatMul_308_Grad/Gemm_2\n";
+    }
 
     // if a kernel has been added in the session state, it better be NON-null.
     if (p_op_kernel == nullptr)
