@@ -90,6 +90,7 @@ TrainingConfigurationResult ConfigureSessionForTraining(
 #endif
 
   training::TrainingSession::TrainingConfiguration config{};
+  config.model_with_training_graph_path = "training_graph.onnx";
   config.weight_names_to_train = parameters.weights_to_train;
   config.weight_names_to_not_train = parameters.weights_not_to_train;
   config.immutable_weights = parameters.immutable_weights;
