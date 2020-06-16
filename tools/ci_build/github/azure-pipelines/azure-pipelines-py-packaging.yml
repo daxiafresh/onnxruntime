@@ -51,7 +51,7 @@ jobs:
     - task: CmdLine@2
       inputs:
         script: |
-          sudo --preserve-env docker run --rm --volume $(Build.SourcesDirectory):/onnxruntime_src --volume $(Build.BinariesDirectory):/build --volume /data/models:/build/models:ro -e NIGHTLY_BUILD -e BUILD_BUILDNUMBER onnxruntime-manylinux-$(python.version) $(python.dir)/bin/python3 /onnxruntime_src/tools/ci_build/build.py --build_dir /build --config Release --skip_submodule_sync --parallel  --build_wheel --use_openmp --enable_onnx_tests $(FeaturizerBuildFlag) --cmake_extra_defines PYTHON_INCLUDE_DIR=$(python.include.dir) PYTHON_LIBRARY=/usr/lib64/librt.so
+          sudo --preserve-env docker run --rm --volume $(Build.SourcesDirectory):/onnxruntime_src --volume $(Build.BinariesDirectory):/build --volume /data/models:/build/models:ro -e NIGHTLY_BUILD -e BUILD_BUILDNUMBER onnxruntime-manylinux-$(python.version) $(python.dir)/bin/python3 /onnxruntime_src/tools/ci_build/build.py --build_dir /build --config Release --skip_submodule_sync --parallel  --build_wheel --enable_onnx_tests $(FeaturizerBuildFlag) --cmake_extra_defines PYTHON_INCLUDE_DIR=$(python.include.dir) PYTHON_LIBRARY=/usr/lib64/librt.so
         workingDirectory: $(Build.SourcesDirectory)
 
     - task: CopyFiles@2
@@ -200,7 +200,7 @@ jobs:
     displayName: 'BUILD'
     inputs:
       scriptPath: '$(Build.SourcesDirectory)\tools\ci_build\build.py'
-      arguments: '--config RelWithDebInfo --enable_lto --build_dir $(Build.BinariesDirectory) --skip_submodule_sync --cmake_generator "Visual Studio 16 2019" --enable_pybind --use_openmp --enable_onnx_tests $(FeaturizerBuildFlag) --parallel --use_telemetry'
+      arguments: '--config RelWithDebInfo --enable_lto --build_dir $(Build.BinariesDirectory) --skip_submodule_sync --cmake_generator "Visual Studio 16 2019" --enable_pybind --enable_onnx_tests $(FeaturizerBuildFlag) --parallel --use_telemetry'
       workingDirectory: '$(Build.BinariesDirectory)'
 
   # Esrp signing
@@ -364,7 +364,7 @@ jobs:
     - script: |
         sudo python -m pip install -r '$(Build.SourcesDirectory)/tools/ci_build/github/linux/docker/scripts/requirements.txt'
         sudo xcode-select --switch /Applications/Xcode_10.app/Contents/Developer
-        ./build.sh --config Release --skip_submodule_sync --parallel --build_wheel --use_openmp $(FeaturizerBuildFlag)
+        ./build.sh --config Release --skip_submodule_sync --parallel --build_wheel $(FeaturizerBuildFlag)
       displayName: 'Command Line Script'
 
     - task: CopyFiles@2

@@ -112,7 +112,7 @@ stages:
                   --skip_submodule_sync \
                   --parallel \
                   --build_wheel \
-                  --use_openmp \
+                  \
                   --enable_onnx_tests
             workingDirectory: $(Build.SourcesDirectory)
 
@@ -264,7 +264,7 @@ stages:
             --skip_submodule_sync
             --cmake_generator "Visual Studio 16 2019"
             --build_wheel
-            --use_openmp
+           
             --enable_onnx_tests
             --parallel
             ${{ variables.actual_extra_build_py_parameters }}
@@ -392,7 +392,7 @@ stages:
               --skip_submodule_sync \
               --parallel \
               --build_wheel \
-              --use_openmp \
+              \
               ${{ variables.actual_extra_build_py_parameters }}
           displayName: 'Command Line Script'
 
